@@ -1,0 +1,12 @@
+name = "ugc-studio"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+CLAUDE_MODEL = "claude-sonnet-4-5"
+# ALLOWED_ORIGIN = "https://lucasbarranco-blip.github.io"
+
+# Secrets (no van acá):
+#   wrangler secret put FAL_KEY
+#   wrangler secret put ANTHROPIC_KEY
+#   wrangler secret put APP_TOKEN

@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UGC Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1115;--panel:#171a21;--panel2:#1e222b;--line:#2a2f3a;--text:#e9ecf2;--muted:#9aa3b2;
+  --accent:#ff5a5f;--accent2:#ffb84d;--ok:#3ecf8e;--warn:#ffb84d;--err:#ff6b6b;--radius:14px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 Inter,system-ui,sans-serif}
+header{position:sticky;top:0;z-index:5;background:rgba(15,17,21,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.hwrap{max-width:1180px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{font-weight:800;letter-spacing:-.02em;font-size:18px}
+.logo span{color:var(--accent)}
+.cost{margin-left:auto;display:flex;gap:10px;align-items:center;font-size:13px;color:var(--muted)}
+.pill{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:5px 11px;color:var(--text);font-weight:600}
+.pill.over{border-color:var(--warn);color:var(--warn)}
+main{max-width:1180px;margin:0 auto;padding:18px 16px 80px;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px}
+@media(max-width:960px){main{grid-template-columns:1fr}}
+section.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:16px}
+h2{margin:0 0 4px;font-size:16px;display:flex;align-items:center;gap:10px}
+h2 .n{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:inline-grid;place-items:center;font-size:12px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 14px}
+label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px;font-weight:500}
+input[type=text],input[type=password],textarea,select{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px 11px;font:inherit}
+textarea{resize:vertical;min-height:64px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.row{grid-template-columns:1fr}}
+button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:9px 14px;cursor:pointer;background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button:disabled{opacity:.5;cursor:not-allowed}
+button.sm{padding:5px 10px;font-size:13px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.drop{border:1.5px dashed var(--line);border-radius:12px;padding:14px;text-align:center;color:var(--muted);cursor:pointer;display:flex;gap:12px;align-items:center;justify-content:center;min-height:96px}
+.drop img{max-height:120px;border-radius:8px}
+.personas{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.persona{background:var(--panel2);border:1.5px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;font-size:13px}
+.persona b{display:block;font-size:14px;margin-bottom:2px}
+.persona.on{border-color:var(--accent)}
+.scene{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
+.scene-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.scene-h b{font-size:14px}
+.tag{font-size:11px;padding:2px 8px;border-radius:999px;background:#2b3140;color:var(--muted);font-weight:600}
+.tag.ok{background:rgba(62,207,142,.15);color:var(--ok)}
+.tag.run{background:rgba(255,184,77,.15);color:var(--warn)}
+.tag.err{background:rgba(255,107,107,.15);color:var(--err)}
+.scene-h .sp{flex:1}
+.media{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.media img,.media video{width:120px;aspect-ratio:9/16;object-fit:cover;border-radius:8px;background:#000;border:1px solid var(--line)}
+.ph{width:120px;aspect-ratio:9/16;border-radius:8px;border:1px dashed var(--line);display:grid;place-items:center;color:var(--muted);font-size:12px;text-align:center;padding:6px}
+.wc{font-size:11px;color:var(--muted);text-align:right;margin-top:2px}
+.wc.bad{color:var(--warn)}
+aside .sticky{position:sticky;top:76px}
+.preview{background:#000;border-radius:var(--radius);aspect-ratio:9/16;width:100%;max-width:380px;overflow:hidden;border:1px solid var(--line);position:relative}
+.preview canvas,.preview video{width:100%;height:100%;display:block;object-fit:contain}
+.opts label.ck{display:flex;gap:8px;align-items:center;color:var(--text);font-size:13px;margin:6px 0}
+.log{font-size:12px;color:var(--muted);max-height:160px;overflow:auto;background:var(--panel2);border-radius:10px;padding:8px;margin-top:10px;white-space:pre-wrap}
+.note{font-size:12px;color:var(--muted);background:var(--panel2);border-left:3px solid var(--accent2);padding:8px 10px;border-radius:8px;margin-top:10px}
+details summary{cursor:pointer;color:var(--muted);font-size:13px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<header><div class="hwrap">
+  <div class="logo">UGC<span>Studio</span></div>
+  <button class="sm" id="btnCfg">⚙ Conexión</button>
+  <div class="cost">Costo estimado <span class="pill" id="costEst">US$ 0,00</span> Gastado <span class="pill" id="costSpent">US$ 0,00</span></div>
+</div></header>
+
+<main>
+<div>
+  <!-- Config -->
+  <section class="card hidden" id="cfgCard">
+    <h2>Conexión</h2>
+    <p class="sub">URL del Worker de Cloudflare y el token que configuraste como APP_TOKEN. Se guardan sólo en este navegador.</p>
+    <div class="row">
+      <div><label>Worker URL</label><input type="text" id="cfgUrl" placeholder="https://ugc-studio.tu-cuenta.workers.dev"></div>
+      <div><label>App token</label><input type="password" id="cfgTok"></div>
+    </div>
+    <div class="btns"><button class="primary" id="cfgSave">Guardar</button><button id="cfgTest">Probar</button><span id="cfgMsg" class="sub" style="margin:8px 0 0"></span></div>
+  </section>
+
+  <!-- 1 Producto -->
+  <section class="card">
+    <h2><span class="n">1</span>Producto</h2>
+    <p class="sub">Foto limpia del producto (fondo claro idealmente). Es la referencia para que la modelo lo tenga en mano.</p>
+    <div class="drop" id="dropProd"><span id="prodHint">Tocá o arrastrá la foto del producto</span><img id="prodImg" class="hidden" alt=""></div>
+    <input type="file" id="fileProd" accept="image/*" class="hidden">
+    <div class="row">
+      <div><label>Marca</label>
+        <select id="brand"><option>Ganga Home</option><option>Balling</option><option>Savia Glow</option><option>Anushka Aromas</option><option>Otra</option></select></div>
+      <div><label>Producto</label><input type="text" id="prodName" placeholder="Acolchado reversible 2 plazas"></div>
+    </div>
+    <label>Qué tiene de bueno (beneficios, material, precio, dónde se compra)</label>
+    <textarea id="prodDesc" placeholder="Microfibra suave, reversible gris/blanco, lavable en lavarropas, envío gratis en Mercado Libre"></textarea>
+  </section>
+
+  <!-- 2 Modelo -->
+  <section class="card">
+    <h2><span class="n">2</span>Modelo</h2>
+    <p class="sub">Elegí un perfil. Opcional: subí una imagen de referencia de la modelo (generada con IA o de alguien que te dio permiso).</p>
+    <div class="personas" id="personas"></div>
+    <label>Descripción de la modelo (en inglés funciona mejor para los motores)</label>
+    <textarea id="personaDesc"></textarea>
+    <div class="row">
+      <div><label>Ambiente</label><input type="text" id="setting" placeholder="bright modern Buenos Aires apartment bedroom"></div>
+      <div><label>Referencia de modelo (opcional)</label>
+        <div class="drop" id="dropModel" style="min-height:44px;padding:8px"><span id="modelHint">Subir imagen</span><img id="modelImg" class="hidden" alt="" style="max-height:60px"></div>
+        <input type="file" id="fileModel" accept="image/*" class="hidden"></div>
+    </div>
+  </section>
+
+  <!-- 3 Guion -->
+  <section class="card">
+    <h2><span class="n">3</span>Guion y escenas</h2>
+    <p class="sub">Claude arma el guion en rioplatense. Cada escena es un clip (4, 6 u 8 s). Tip: ~2 palabras por segundo.</p>
+    <div class="row">
+      <div><label>Ángulo</label>
+        <select id="angle">
+          <option value="unboxing">Unboxing / primera impresión</option>
+          <option value="problema">Problema → solución</option>
+          <option value="3razones">3 razones para comprarlo</option>
+          <option value="rutina">Rutina / uso en el día a día</option>
+          <option value="oferta">Oferta / urgencia</option>
+        </select></div>
+      <div><label>Estructura</label>
+        <select id="structure">
+          <option value="8,6">2 escenas · 8s hablando + 6s usando (≈US$ 0,86)</option>
+          <option value="6,4,4">3 escenas · 6s + 4s + 4s (≈US$ 0,94)</option>
+          <option value="8">1 escena · 8s hablando (≈US$ 0,48)</option>
+        </select></div>
+    </div>
+    <div class="btns">
+      <button class="primary" id="btnScript">✨ Generar guion</button>
+      <button id="btnAddScene">+ Escena manual</button>
+    </div>
+    <div id="scenes" style="margin-top:14px"></div>
+    <div class="btns">
+      <button class="primary" id="btnAllFrames" disabled>1 · Generar imágenes</button>
+      <button class="primary" id="btnAllVideos" disabled>2 · Generar clips</button>
+    </div>
+    <div class="note">Las imágenes se generan primero (US$ 0,08 c/u) para que apruebes la modelo antes de gastar en video (US$ 0,05/s). Podés regenerar cualquier escena suelta.</div>
+  </section>
+</div>
+
+<!-- 4 Edición -->
+<aside><div class="sticky">
+  <section class="card">
+    <h2><span class="n">4</span>Edición y export</h2>
+    <p class="sub">Une los clips, agrega subtítulos y cierre. Se renderiza en tiempo real.</p>
+    <div class="preview"><canvas id="cv" width="720" height="1280"></canvas><video id="outVid" class="hidden" controls playsinline></video></div>
+    <div class="opts">
+      <label class="ck"><input type="checkbox" id="optSubs" checked> Subtítulos</label>
+      <label class="ck"><input type="checkbox" id="optHook" checked> Texto de hook arriba (primeros 2,5 s)</label>
+      <label class="ck"><input type="checkbox" id="optEnd" checked> Placa final con CTA</label>
+      <label class="ck"><input type="checkbox" id="optAi" checked> Etiqueta "Hecho con IA"</label>
+      <label>Hook en pantalla</label><input type="text" id="hookText" placeholder="Lo mejor que le compré a mi cama 😮‍💨">
+      <label>CTA final</label><input type="text" id="ctaText" value="Buscalo en Mercado Libre">
+    </div>
+    <div class="btns">
+      <button class="primary" id="btnRender" disabled>🎬 Renderizar</button>
+      <a id="dl" class="hidden"><button>⬇ Descargar</button></a>
+    </div>
+    <div class="log" id="log">Listo.</div>
+    <details style="margin-top:10px"><summary>Proyecto</summary>
+      <div class="btns"><button class="sm" id="btnNew">Nuevo proyecto</button></div>
+    </details>
+  </section>
+</div></aside>
+</main>
+
+<script>
+/* ===================== estado ===================== */
+const PRICES = { image: 0.08, videoPerSec: 0.05 };
+const EP = { image: 'fal-ai/nano-banana-2/edit', video: 'fal-ai/veo3.1/lite/image-to-video' };
+const PERSONAS = [
+  { id:'sofi', name:'Sofi · 28', gender:'woman', desc:'a 28-year-old Argentine woman with long wavy brown hair, light makeup, casual oversized beige t-shirt, friendly and spontaneous', set:'bright modern Buenos Aires apartment bedroom with natural window light' },
+  { id:'caro', name:'Caro · 40 mamá', gender:'woman', desc:'a 40-year-old Argentine mother with shoulder-length dark hair, warm smile, comfortable knit sweater, relatable and practical', set:'cozy family living room with plants, afternoon light' },
+  { id:'vale', name:'Vale · 22 gen Z', gender:'woman', desc:'a 22-year-old Argentine woman with straight black hair in a claw clip, small gold hoops, trendy casual outfit, energetic', set:'aesthetic small bedroom with fairy lights and neutral tones' },
+  { id:'martin', name:'Martín · 32', gender:'man', desc:'a 32-year-old Argentine man with short dark hair and a trimmed beard, plain white t-shirt, laid-back and confident', set:'minimalist modern apartment with wooden furniture' },
+  { id:'nico', name:'Nico · 25 deportivo', gender:'man', desc:'a 25-year-old athletic Argentine man with curly hair, sporty hoodie, upbeat', set:'apartment entrance near the door, morning light' },
+];
+const LS = 'ugcstudio.v1';
+let S = load() || fresh();
+function fresh(prev){ return { cfg: prev?.cfg || { url:'', tok:'' }, spent: prev?.spent || 0, persona:'sofi', personaDesc:PERSONAS[0].desc, setting:PERSONAS[0].set,
+  product:{ name:'', desc:'', brand:'Ganga Home', photo:null }, modelRef:null, angle:'unboxing', structure:'8,6', scenes:[], hook:'', cta:'Buscalo en Mercado Libre' }; }
+function load(){ try{ return JSON.parse(localStorage.getItem(LS)); }catch(e){ return null; } }
+function save(){ try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){ try{ const c={...S,product:{...S.product,photo:null},modelRef:null}; localStorage.setItem(LS, JSON.stringify(c)); }catch(_){} } }
+const $ = id => document.getElementById(id);
+const fmt = n => 'US$ ' + n.toFixed(2).replace('.', ',');
+function log(m){ const el=$('log'); el.textContent = (el.textContent==='Listo.'?'':el.textContent+'\n') + new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) + '  ' + m; el.scrollTop = el.scrollHeight; }
+
+/* ===================== API ===================== */
+async function api(path, opts={}){
+  if(!S.cfg.url) throw new Error('Configurá la conexión (⚙)');
+  const r = await fetch(S.cfg.url.replace(/\/$/,'') + path, { ...opts, headers:{ 'Content-Type':'application/json', 'X-App-Token':S.cfg.tok, ...(opts.headers||{}) } });
+  const d = await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(d.error || d.detail?.[0]?.msg || (typeof d.detail==='string'?d.detail:'') || ('HTTP '+r.status));
+  return d;
+}
+async function falRun(endpoint, input, onStatus){
+  const sub = await api('/fal/submit', { method:'POST', body: JSON.stringify({ endpoint, input }) });
+  if(!sub.status_url) throw new Error('fal no devolvió status_url');
+  const t0 = Date.now();
+  while(true){
+    await sleep(4000);
+    const st = await api('/fal/get?u=' + encodeURIComponent(sub.status_url));
+    onStatus && onStatus(st.status, Math.round((Date.now()-t0)/1000));
+    if(st.status === 'COMPLETED') break;
+    if(Date.now()-t0 > 8*60*1000) throw new Error('timeout');
+  }
+  return await api('/fal/get?u=' + encodeURIComponent(sub.response_url));
+}
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+function addSpent(v){ S.spent += v; save(); $('costSpent').textContent = fmt(S.spent); }
+
+/* ===================== imágenes ===================== */
+function readImage(file, max=1024){
+  return new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>{ const im=new Image(); im.onload=()=>{
+    const k=Math.min(1, max/Math.max(im.width,im.height)); const c=document.createElement('canvas'); c.width=Math.round(im.width*k); c.height=Math.round(im.height*k);
+    const x=c.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height); x.drawImage(im,0,0,c.width,c.height); res(c.toDataURL('image/jpeg',.88)); }; im.onerror=rej; im.src=fr.result; }; fr.onerror=rej; fr.readAsDataURL(file); });
+}
+function bindDrop(dropId, fileId, onData){
+  const d=$(dropId), f=$(fileId);
+  d.onclick=()=>f.click();
+  f.onchange=async()=>{ if(f.files[0]) onData(await readImage(f.files[0])); f.value=''; };
+  d.ondragover=e=>{e.preventDefault(); d.style.borderColor='var(--accent)';};
+  d.ondragleave=()=>d.style.borderColor='';
+  d.ondrop=async e=>{ e.preventDefault(); d.style.borderColor=''; const fl=e.dataTransfer.files[0]; if(fl) onData(await readImage(fl)); };
+}
+
+/* ===================== UI render ===================== */
+function renderPersonas(){
+  $('personas').innerHTML = PERSONAS.map(p=>`<div class="persona ${S.persona===p.id?'on':''}" data-id="${p.id}"><b>${p.name}</b>${p.gender==='woman'?'Mujer':'Hombre'}</div>`).join('');
+  document.querySelectorAll('.persona').forEach(el=>el.onclick=()=>{ const p=PERSONAS.find(x=>x.id===el.dataset.id); S.persona=p.id; S.personaDesc=p.desc; S.setting=p.set; $('personaDesc').value=p.desc; $('setting').value=p.set; save(); renderPersonas(); });
+}
+const gender = () => (PERSONAS.find(p=>p.id===S.persona)||{}).gender || (/\bman\b/i.test(S.personaDesc)?'man':'woman');
+const maxWords = d => Math.round(d*2.1);
+const wcount = t => (t||'').trim().split(/\s+/).filter(Boolean).length;
+function sceneCost(sc){ return PRICES.image + PRICES.videoPerSec*sc.duration; }
+function updateCost(){
+  const est = S.scenes.reduce((a,s)=>a+sceneCost(s),0);
+  $('costEst').textContent = fmt(est); $('costEst').classList.toggle('over', est>1);
+  $('costSpent').textContent = fmt(S.spent);
+  $('btnAllFrames').disabled = !S.scenes.length;
+  $('btnAllVideos').disabled = !S.scenes.length || S.scenes.some(s=>!s.frame);
+  $('btnRender').disabled = !S.scenes.length || S.scenes.some(s=>!s.video);
+}
+function statusTag(s){ return s.err?`<span class="tag err">error</span>`: s.busy?`<span class="tag run">${s.busy}</span>`: s.video?`<span class="tag ok">clip listo</span>`: s.frame?`<span class="tag ok">imagen lista</span>`:`<span class="tag">pendiente</span>`; }
+function renderScenes(){
+  const wrap=$('scenes');
+  wrap.innerHTML = S.scenes.map((s,i)=>`
+  <div class="scene" data-i="${i}">
+    <div class="scene-h"><b>Escena ${i+1}</b>
+      <select data-k="type" style="width:auto"><option value="talk" ${s.type==='talk'?'selected':''}>Habla a cámara</option><option value="broll" ${s.type==='broll'?'selected':''}>Usando el producto (voz en off)</option></select>
+      <select data-k="duration" style="width:auto">${[4,6,8].map(d=>`<option value="${d}" ${s.duration==d?'selected':''}>${d}s</option>`).join('')}</select>
+      ${statusTag(s)}<span class="sp"></span>
+      <button class="sm" data-act="up" ${i===0?'disabled':''}>↑</button><button class="sm" data-act="del">✕</button>
+    </div>
+    <label>${s.type==='talk'?'Lo que dice':'Voz en off'} <span style="opacity:.7">(${s.type==='broll'?'opcional, ':''}máx ~${maxWords(s.duration)} palabras)</span></label>
+    <textarea data-k="dialogue" rows="2">${esc(s.dialogue)}</textarea>
+    <div class="wc ${wcount(s.dialogue)>maxWords(s.duration)?'bad':''}">${wcount(s.dialogue)} palabras</div>
+    <label>Acción / plano (inglés)</label>
+    <textarea data-k="action" rows="2">${esc(s.action)}</textarea>
+    <div class="media">
+      ${s.frame?`<img src="${s.frame}" alt="">`:`<div class="ph">imagen</div>`}
+      ${s.video?`<video src="${s.video}" controls playsinline muted></video>`:`<div class="ph">clip</div>`}
+      <div style="display:flex;flex-direction:column;gap:6px;justify-content:flex-end">
+        <button class="sm" data-act="frame" ${s.busy?'disabled':''}>${s.frame?'↻ ':''}Imagen · ${fmt(PRICES.image)}</button>
+        <button class="sm" data-act="video" ${(!s.frame||s.busy)?'disabled':''}>${s.video?'↻ ':''}Clip · ${fmt(PRICES.videoPerSec*s.duration)}</button>
+      </div>
+    </div>
+    ${s.err?`<div class="note" style="border-color:var(--err)">${esc(s.err)}</div>`:''}
+  </div>`).join('');
+  wrap.querySelectorAll('.scene').forEach(el=>{
+    const i=+el.dataset.i;
+    el.querySelectorAll('[data-k]').forEach(inp=>{
+      inp.oninput = inp.onchange = ()=>{ const k=inp.dataset.k; S.scenes[i][k] = k==='duration'?+inp.value:inp.value; save();
+        if(inp.tagName==='SELECT') renderScenes(); else { const w=el.querySelector('.wc'); if(w&&k==='dialogue'){ const n=wcount(inp.value); w.textContent=n+' palabras'; w.classList.toggle('bad', n>maxWords(S.scenes[i].duration)); } } updateCost(); };
+    });
+    el.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{
+      const a=b.dataset.act;
+      if(a==='del'){ S.scenes.splice(i,1); }
+      if(a==='up'){ [S.scenes[i-1],S.scenes[i]]=[S.scenes[i],S.scenes[i-1]]; }
+      if(a==='frame') return genFrame(i);
+      if(a==='video') return genVideo(i);
+      save(); renderScenes();
+    });
+  });
+  updateCost();
+}
+function esc(t){ return (t||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* ===================== guion (Claude) ===================== */
+async function genScript(){
+  const p=S.product; if(!p.name) return alert('Poné el nombre del producto');
+  const durs = S.structure.split(',').map(Number);
+  const plan = durs.map((d,i)=>`Escena ${i+1}: ${d}s, tipo ${i===0||durs.length===1?'"talk" (habla a cámara)':'"broll" (se la ve usando el producto, voz en off corta u omitida)'}, máximo ${maxWords(d)} palabras`).join('\n');
+  const system = `Sos guionista de videos UGC verticales para TikTok/Reels/Mercado Ads en Argentina. Escribís en español rioplatense con voseo, natural, como habla una persona real a cámara, sin sonar a publicidad. Reglas: el primer segundo tiene que enganchar. Usá sólo beneficios que te den; no inventes datos, precios, resultados ni que la persona compró o usó el producto por tiempo si no se dice. Presentalo como alguien que muestra el producto. Respetá el máximo de palabras por escena (es crítico: el video dura eso). Devolvé SOLO JSON válido.`;
+  const prompt = `Marca: ${p.brand}\nProducto: ${p.name}\nBeneficios/datos: ${p.desc||'(no especificados)'}\nPersona: ${S.personaDesc}\nAmbiente: ${S.setting}\nÁngulo: ${$('angle').selectedOptions[0].text}\n\nEscenas:\n${plan}\n\nFormato:\n{"hook_text":"texto corto para pantalla, máx 7 palabras","cta":"CTA corto","scenes":[{"type":"talk|broll","duration":8,"dialogue":"lo que dice en rioplatense","action":"in English: concrete camera framing and what the person physically does with the product, one sentence"}]}`;
+  const b=$('btnScript'); b.disabled=true; b.textContent='Escribiendo…'; log('Generando guion…');
+  try{
+    const r = await api('/script', { method:'POST', body: JSON.stringify({ system, prompt }) });
+    const j = JSON.parse(r.text.slice(r.text.indexOf('{'), r.text.lastIndexOf('}')+1));
+    S.scenes = j.scenes.map((s,i)=>({ type: s.type==='broll'?'broll':'talk', duration: durs[i]||s.duration||6, dialogue:s.dialogue||'', action:s.action||'', frame:null, video:null }));
+    S.hook = j.hook_text||''; S.cta = j.cta||S.cta; $('hookText').value=S.hook; $('ctaText').value=S.cta;
+    save(); renderScenes(); log('Guion listo. Revisalo y generá las imágenes.');
+  }catch(e){ log('Error guion: '+e.message); alert(e.message); }
+  b.disabled=false; b.textContent='✨ Generar guion';
+}
+
+/* ===================== keyframes (Nano Banana 2) ===================== */
+function framePrompt(i){
+  const s=S.scenes[i], p=S.product, g=gender();
+  const who = i===0 || !S.scenes[0].frame ? S.personaDesc : `the exact same ${g} from the first reference image (same face, hair and outfit)`;
+  return `Photorealistic vertical 9:16 smartphone photo, authentic UGC creator style, shot on iPhone, slightly imperfect handheld framing. Subject: ${who}. Setting: ${S.setting}. Moment: ${s.action}. The product "${p.name}" from the product reference image appears clearly and must look identical to it (same colors, shape, pattern, packaging). Natural soft daylight, realistic skin texture, no text, no captions, no watermarks, no added logos.`;
+}
+async function genFrame(i){
+  const s=S.scenes[i];
+  if(!S.product.photo) return alert('Subí la foto del producto');
+  s.busy='imagen…'; s.err=null; renderScenes();
+  const refs=[];
+  if(i>0 && S.scenes[0].frame) refs.push(S.scenes[0].frame); else if(S.modelRef) refs.push(S.modelRef);
+  refs.push(S.product.photo);
+  try{
+    const out = await falRun(EP.image, { prompt: framePrompt(i), image_urls: refs, num_images:1, aspect_ratio:'9:16', resolution:'1K', output_format:'jpeg' }, st=>{ s.busy='imagen · '+st.toLowerCase().replace('_',' '); renderScenes(); });
+    s.frame = out.images?.[0]?.url; if(!s.frame) throw new Error('sin imagen en la respuesta');
+    s.video=null; addSpent(PRICES.image); log(`Escena ${i+1}: imagen lista`);
+  }catch(e){ s.err='Imagen: '+e.message; log(`Escena ${i+1}: ${e.message}`); }
+  s.busy=null; save(); renderScenes();
+}
+
+/* ===================== clips (Veo 3.1 Lite) ===================== */
+function videoPrompt(s){
+  const g=gender(), pr = g==='man'?'He':'She';
+  const base = `Vertical UGC smartphone video, handheld, natural daylight, realistic. ${s.action}`;
+  const line = (s.dialogue||'').trim().replace(/"/g,"'");
+  if(s.type==='talk') return `${base}. ${pr} looks into the camera and says in natural casual Argentine Rioplatense Spanish (Buenos Aires accent, voseo), friendly conversational tone: "${line}". Lip-synced speech, room ambience only, no background music, no subtitles, no on-screen text.`;
+  return `${base}. Smooth subtle camera movement, the product stays clearly visible. ${line?`A ${g==='man'?'male':'female'} voiceover in casual Argentine Rioplatense Spanish says: "${line}".`:'Natural ambient sound only.'} No background music, no subtitles, no on-screen text.`;
+}
+async function genVideo(i){
+  const s=S.scenes[i]; if(!s.frame) return;
+  s.busy='clip…'; s.err=null; renderScenes();
+  try{
+    const out = await falRun(EP.video, { prompt: videoPrompt(s), image_url: s.frame, aspect_ratio:'9:16', duration: s.duration+'s', resolution:'720p', generate_audio:true, negative_prompt:'subtitles, captions, text overlay, music, distorted hands, extra fingers, warped product, logo changes' }, (st,sec)=>{ s.busy=`clip · ${st.toLowerCase().replace('_',' ')} ${sec}s`; renderScenes(); });
+    s.video = out.video?.url; if(!s.video) throw new Error('sin video en la respuesta');
+    addSpent(PRICES.videoPerSec*s.duration); log(`Escena ${i+1}: clip listo`);
+  }catch(e){ s.err='Clip: '+e.message; log(`Escena ${i+1}: ${e.message}`); }
+  s.busy=null; save(); renderScenes();
+}
+async function allFrames(){ if(!S.scenes.length) return; if(!S.scenes[0].frame) await genFrame(0); if(!S.scenes[0].frame) return; await Promise.all(S.scenes.map((s,i)=> i>0 && !s.frame ? genFrame(i) : null)); }
+async function allVideos(){ await Promise.all(S.scenes.map((s,i)=> s.video?null:genVideo(i))); }
+
+/* ===================== compositor ===================== */
+function chunks(text, n=3){ const w=(text||'').trim().split(/\s+/).filter(Boolean); const out=[]; for(let i=0;i<w.length;i+=n) out.push(w.slice(i,i+n).join(' ')); return out; }
+function wrapText(ctx, text, maxW){ const words=text.split(' '); const lines=[]; let cur=''; for(const w of words){ const t=cur?cur+' '+w:w; if(ctx.measureText(t).width>maxW && cur){ lines.push(cur); cur=w; } else cur=t; } if(cur) lines.push(cur); return lines; }
+function drawBoxText(ctx, text, y, size, opt={}){
+  ctx.save(); ctx.font=`800 ${size}px Inter, sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle';
+  const lines=wrapText(ctx, text, 620); const lh=size*1.18;
+  lines.forEach((l,k)=>{ const yy=y+(k-(lines.length-1)/2)*lh;
+    if(opt.box){ const w=ctx.measureText(l).width+36; ctx.fillStyle=opt.box; roundRect(ctx,360-w/2,yy-lh/2-4,w,lh+8,14); ctx.fill(); ctx.fillStyle=opt.color||'#111'; ctx.fillText(l,360,yy); }
+    else { ctx.lineJoin='round'; ctx.lineWidth=size*.22; ctx.strokeStyle='#000'; ctx.strokeText(l,360,yy); ctx.fillStyle=opt.color||'#fff'; ctx.fillText(l,360,yy); }
+  }); ctx.restore();
+}
+function roundRect(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
+function drawCover(ctx, v){ const W=720,H=1280, vr=v.videoWidth/v.videoHeight, cr=W/H; let sw=v.videoWidth, sh=v.videoHeight, sx=0, sy=0;
+  if(vr>cr){ sw=sh*cr; sx=(v.videoWidth-sw)/2; } else { sh=sw/cr; sy=(v.videoHeight-sh)/2; } ctx.drawImage(v,sx,sy,sw,sh,0,0,W,H); }
+
+async function fetchBlob(u){
+  let r; try{ r = await fetch(u); if(!r.ok) throw 0; }catch(_){ r = await fetch(S.cfg.url.replace(/\/$/,'')+'/media?u='+encodeURIComponent(u), { headers:{'X-App-Token':S.cfg.tok} }); }
+  if(!r.ok) throw new Error('no pude bajar el clip');
+  return await r.blob();
+}
+function pickMime(){ const c=['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm']; return c.find(m=>window.MediaRecorder && MediaRecorder.isTypeSupported(m)) || ''; }
+
+async function render(){
+  const btn=$('btnRender'); btn.disabled=true; $('dl').classList.add('hidden');
+  const ac = new (window.AudioContext||window.webkitAudioContext)(); ac.resume();
+  const cv=$('cv'), ctx=cv.getContext('2d'); $('outVid').classList.add('hidden'); cv.classList.remove('hidden');
+  const opt={ subs:$('optSubs').checked, hook:$('optHook').checked, end:$('optEnd').checked, ai:$('optAi').checked, hookText:$('hookText').value.trim(), cta:$('ctaText').value.trim() };
+  try{
+    log('Bajando clips…');
+    const blobs = []; for(const s of S.scenes) blobs.push(await fetchBlob(s.video));
+    const dest = ac.createMediaStreamDestination();
+    const auds = await Promise.all(blobs.map(b=>b.arrayBuffer().then(ab=>ac.decodeAudioData(ab)).catch(()=>null)));
+    const vids = blobs.map(b=>{ const v=document.createElement('video'); v.src=URL.createObjectURL(b); v.playsInline=true; v.muted=true; v.preload='auto'; return v; });
+    await Promise.all(vids.map(v=>new Promise((res,rej)=>{ v.onloadeddata=res; v.onerror=()=>rej(new Error('clip ilegible')); })));
+    const stream = new MediaStream([ ...cv.captureStream(30).getVideoTracks(), ...dest.stream.getAudioTracks() ]);
+    const mime = pickMime(); const rec = new MediaRecorder(stream, mime?{ mimeType:mime, videoBitsPerSecond:6_000_000 }:undefined);
+    const parts=[]; rec.ondataavailable=e=>e.data.size&&parts.push(e.data);
+    const done = new Promise(r=>rec.onstop=r);
+    await ac.resume(); rec.start(250); log('Renderizando… (' + (mime||'default') + ')');
+    let tGlobal=0; const brand=S.product.brand;
+    for(let i=0;i<vids.length;i++){
+      const v=vids[i], s=S.scenes[i], cs=chunks(s.dialogue); v.currentTime=0; await v.play();
+      if(auds[i]){ const src=ac.createBufferSource(); src.buffer=auds[i]; src.connect(dest); src.start(); }
+      await new Promise(res=>{
+        const tick=()=>{
+          if(v.ended || v.paused && v.currentTime>0){ return res(); }
+          drawCover(ctx,v); const t=v.currentTime, D=v.duration||s.duration;
+          if(opt.subs && cs.length){ const start=Math.min(.35,D*.05), span=(D-start-.4)/cs.length; const k=Math.floor((t-start)/span); if(t>=start && k>=0 && k<cs.length) drawBoxText(ctx, cs[k], 930, 54); }
+          if(opt.hook && opt.hookText && tGlobal+t<2.5) drawBoxText(ctx, opt.hookText, 200, 46, { box:'#fff', color:'#111' });
+          if(opt.ai) aiTag(ctx);
+          requestAnimationFrame(tick);
+        };
+        v.onended=res; tick();
+      });
+      tGlobal += v.duration||s.duration;
+    }
+    if(opt.end){
+      const last=vids[vids.length-1]; const t0=performance.now();
+      await new Promise(res=>{ const tick=()=>{ const e=(performance.now()-t0)/1000; ctx.save(); ctx.filter='blur(14px) brightness(.45)'; drawCover(ctx,last); ctx.restore();
+        drawBoxText(ctx, brand, 560, 64); if(opt.cta) drawBoxText(ctx, opt.cta, 700, 44, { box:'#ff5a5f', color:'#fff' }); if(opt.ai) aiTag(ctx);
+        e<2.2 ? requestAnimationFrame(tick) : res(); }; tick(); });
+    }
+    rec.stop(); await done; ac.close();
+    const blob = new Blob(parts, { type: (mime||'video/webm').split(';')[0] }); const out=URL.createObjectURL(blob);
+    const ext = blob.type.includes('mp4')?'mp4':'webm';
+    $('outVid').src=out; $('outVid').classList.remove('hidden'); cv.classList.add('hidden');
+    const a=$('dl'); a.href=out; a.download=`ugc-${slug(S.product.name||'video')}-${Date.now().toString().slice(-5)}.${ext}`; a.classList.remove('hidden');
+    log(`Video listo (${(blob.size/1e6).toFixed(1)} MB, ${ext}).`);
+  }catch(e){ log('Error render: '+e.message); alert(e.message); }
+  btn.disabled=false;
+}
+function aiTag(ctx){ ctx.save(); ctx.font='600 22px Inter, sans-serif'; ctx.textAlign='right'; ctx.fillStyle='rgba(0,0,0,.45)'; roundRect(ctx,520,1210,182,40,10); ctx.fill(); ctx.fillStyle='#fff'; ctx.textBaseline='middle'; ctx.fillText('Hecho con IA',690,1230); ctx.restore(); }
+const slug = t => t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);
+
+/* ===================== init ===================== */
+function hydrate(){
+  $('cfgUrl').value=S.cfg.url; $('cfgTok').value=S.cfg.tok; if(!S.cfg.url) $('cfgCard').classList.remove('hidden');
+  $('brand').value=S.product.brand; $('prodName').value=S.product.name; $('prodDesc').value=S.product.desc;
+  $('personaDesc').value=S.personaDesc; $('setting').value=S.setting; $('angle').value=S.angle; $('structure').value=S.structure;
+  $('hookText').value=S.hook||''; $('ctaText').value=S.cta||'';
+  showImg('prodImg','prodHint',S.product.photo); showImg('modelImg','modelHint',S.modelRef);
+  S.scenes.forEach(s=>s.busy=null);
+  renderPersonas(); renderScenes();
+}
+function showImg(img,hint,src){ $(img).classList.toggle('hidden',!src); $(hint).classList.toggle('hidden',!!src); if(src) $(img).src=src; }
+$('btnCfg').onclick=()=>$('cfgCard').classList.toggle('hidden');
+$('cfgSave').onclick=()=>{ S.cfg={ url:$('cfgUrl').value.trim(), tok:$('cfgTok').value.trim() }; save(); $('cfgMsg').textContent='Guardado'; };
+$('cfgTest').onclick=async()=>{ S.cfg={ url:$('cfgUrl').value.trim(), tok:$('cfgTok').value.trim() }; save(); try{ await api('/ping'); $('cfgMsg').textContent='✓ Conectado'; $('cfgCard').classList.add('hidden'); }catch(e){ $('cfgMsg').textContent='✗ '+e.message; } };
+bindDrop('dropProd','fileProd',d=>{ S.product.photo=d; save(); showImg('prodImg','prodHint',d); });
+bindDrop('dropModel','fileModel',d=>{ S.modelRef=d; save(); showImg('modelImg','modelHint',d); });
+[['brand','brand'],['prodName','name'],['prodDesc','desc']].forEach(([id,k])=>$(id).oninput=$(id).onchange=()=>{ S.product[k]=$(id).value; save(); });
+[['personaDesc','personaDesc'],['setting','setting'],['angle','angle'],['structure','structure'],['hookText','hook'],['ctaText','cta']].forEach(([id,k])=>$(id).oninput=$(id).onchange=()=>{ S[k]=$(id).value; save(); });
+$('btnScript').onclick=genScript;
+$('btnAddScene').onclick=()=>{ S.scenes.push({ type:S.scenes.length?'broll':'talk', duration:6, dialogue:'', action:'', frame:null, video:null }); save(); renderScenes(); };
+$('btnAllFrames').onclick=allFrames; $('btnAllVideos').onclick=allVideos; $('btnRender').onclick=render;
+$('btnNew').onclick=()=>{ if(confirm('¿Empezar un proyecto nuevo? (se mantiene la conexión)')){ S=fresh(S); save(); hydrate(); } };
+hydrate();
+</script>
+</body>
+</html>
